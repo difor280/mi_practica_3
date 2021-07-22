@@ -11,7 +11,7 @@ int COD()
               "2.decodificacion"<<endl;
         cin>>cod;
 
-        if(cod<=2 and cod>0)
+        if(cod<=50 and cod>48)
         {
             break;
         }
@@ -39,30 +39,37 @@ void implementacion(unsigned long int* semilla,unsigned short int* metodo)
 
 }
 
-
-char* lecturaM1(char* nombre,unsigned long long* tamano)
+void tam(char* nombre ,unsigned long long *tamano)
 {
-    fstream text;
-
     fstream archivo(nombre, fstream::in | fstream::ate);
     *tamano=archivo.tellg();
-     archivo.seekg(0);
-     char *datos=new char [*tamano];
-     for(unsigned long long int i=0 ; i<=*tamano ;i++)
+    archivo.close();
+}
+
+char* lecturaM1(char* nombre,unsigned long long tamano)
+{
+
+    fstream archivo(nombre, fstream::in);
+
+     char *datos=new char [tamano];
+     for(unsigned long long int i=0 ; i<tamano ;i++)
      {    int letra=archivo.get();
           datos[i]=char(letra);
      }
+     archivo.close();
      return datos;
+     delete[] datos;
 }
 
-
-void escribirm1 ( char *datos, char *nombre)
+//profe si ve esta parte del codigo,
+//me puede decir que es lo que esta mal
+//porque no me quiere crear  el archivo de texto
+void escribirM1 ( char *datos, char *nombre)
 {
 
-    fstream text;
-    text.open(nombre, fstream::out);
-    text << datos;
-
+    fstream text(nombre, fstream::out  );
+    //text.write( datos,tamano);
+    text<< datos;
     text.close();
 }
 
@@ -103,7 +110,7 @@ char *binarioM1(unsigned long long int tamano, char *escrito)
          }
 
     }
-    delete[] escrito;
+
     return codificado;
     delete [] codificado;
 }

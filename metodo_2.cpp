@@ -1,44 +1,46 @@
 # include "funciones.h"
 
 
-void m2_codificacion(unsigned long long int tamano ,unsigned long int semilla,string nombre,string*texto)
+void m2_codificacion(unsigned long long int tamano ,unsigned long int semilla,string nombre,string texto)
 {
-    texto=bin_m2(tamano,*texto);
-    cout<<endl<<*texto<<endl<<endl<<endl;
-    metodo2(*texto,tamano,semilla,0);
-    cout<<endl<<*texto<<endl;
-    texto=traduccionM2(tamano,*texto);
-    cout<<endl<<*texto<<endl;
-    escribirM2(*texto,nombre);
-    cout<<endl<<*texto<<endl;
+    texto=bin_m2(tamano,texto);
+    cout<<endl<<texto<<endl<<endl<<endl;
+    texto=metodo2(texto,tamano,semilla,0);
+    cout<<endl<<texto<<endl;
+    texto=traduccionM2(tamano,texto);
+    cout<<endl<<texto<<endl;
+    escribirM2(texto,nombre);
+    cout<<endl<<texto<<endl;
 
 }
 //cambiar en un futuro
-void m2_decodificacion(unsigned long long int tamano ,unsigned long int semilla,string nombre,string*texto)
+void m2_decodificacion(unsigned long long int tamano ,unsigned long int semilla,string nombre,string texto)
 {
-    texto=bin_m2(tamano,*texto);
-    cout<<endl<<*texto<<endl<<endl<<endl;
+    texto=bin_m2(tamano,texto);
+    cout<<endl<<texto<<endl<<endl<<endl;
 
-    r_metodo2(*texto,tamano,semilla,0);
-    cout<<endl<<*texto<<endl;
-    texto=traduccionM2(tamano,*texto);
-    cout<<endl<<*texto<<endl;
-    escribirM2(*texto,nombre);
+    texto=r_metodo2(texto,tamano,semilla,0);
+    cout<<endl<<texto<<endl;
+    texto=traduccionM2(tamano,texto);
+    cout<<endl<<texto<<endl;
+    escribirM2(texto,nombre);
 
-    cout<<endl<<*texto<<endl;
+    cout<<endl<<texto<<endl;
 
 }
 
 
 void lecturam2(string *datos,string nombre,unsigned long long *tamano )
 {
-       fstream archivo(nombre, fstream::in | fstream::binary | fstream::ate);
+       fstream archivo;
+       archivo.open(nombre, fstream::in | fstream::binary | fstream::ate);
        *tamano=archivo.tellg();
         archivo.seekg(0);
 
        if (!archivo.is_open())
        {
            cout <<"Archivo no encontrado"<< endl;
+           return;
        }
        /*string *pala= new string;
        while (getline(archivo,*pala,'\n'))
@@ -60,10 +62,10 @@ void lecturam2(string *datos,string nombre,unsigned long long *tamano )
 
 
 
-string *bin_m2(unsigned long long int tamano, string &escrito)
+string bin_m2(unsigned long long int tamano, string escrito)
 {
 
-    string *bits= new string , *codificado = new string ;
+    string bits, codificado ;
     string prueba;
     unsigned int ascii;
     for (unsigned long int i=0; i<tamano;i++)
@@ -71,35 +73,35 @@ string *bin_m2(unsigned long long int tamano, string &escrito)
         //prueba = ();
 
         ascii= unsigned( int (escrito[i]));
-        *bits="";
+        bits="";
         while(ascii > 0)
         {
             if(ascii % 2 == 0)
             {
-                *bits = '0'+*bits;
+                bits = '0'+bits;
             }
             else
             {
-                *bits = '1'+*bits;
+                bits = '1'+ bits;
             }
             ascii = (int) ascii/2;
         }
 
-        while(bits->size()<8)
+        while(bits.size()<8)
         {
-            *bits='0'+*bits;
+            bits='0'+ bits;
         }
-        *codificado= *codificado+*bits;
+        codificado= codificado+bits;
     }
-    delete bits;
+   
     return codificado;
-    delete codificado;
+
 }
 
-string* traduccionM2(unsigned long long int tamano, string &bina)
+string traduccionM2(unsigned long long int tamano, string bina)
 {
 
-    string *escribir= new string ;
+    string escribir;
     unsigned int letra;
 
     for(unsigned int i=0,e=0;e<tamano;e++)
@@ -110,16 +112,16 @@ string* traduccionM2(unsigned long long int tamano, string &bina)
         }
 
         if(bina[i-1]=='0')
-        *escribir= *escribir+ char(letra-1);
-        else *escribir=*escribir + char(letra);
+        escribir= escribir+ char(letra-1);
+        else escribir=escribir + char(letra);
 
     }
     return escribir;
-    delete  escribir;
+
 }
 
 //metodo 2  codificacion
-void metodo2(string &text, unsigned long long tamano, unsigned long int  semilla,unsigned long int posicion)
+string metodo2(string text, unsigned long long tamano, unsigned long int  semilla,unsigned long int posicion)
 {
 
     string nex,ultimo;
@@ -144,13 +146,16 @@ void metodo2(string &text, unsigned long long tamano, unsigned long int  semilla
     }
 
     if((tamano*8-posicion)%semilla != 0)
-    {   unsigned long int conteo=(tamano*8)-posicion;
+    {
+        unsigned long int conteo=(tamano*8)-posicion;
         metodo2(text,tamano,conteo,posicion);
     }
+    return text;
 }
 
+
 //metodo dos decodificacion
-void r_metodo2(string &text, unsigned long long tamano, unsigned long int  semilla,unsigned long int posicion)
+string r_metodo2(string text, unsigned long long tamano, unsigned long int  semilla,unsigned long int posicion)
 {
     string atras,ultimo;
 
@@ -170,14 +175,14 @@ void r_metodo2(string &text, unsigned long long tamano, unsigned long int  semil
     if((tamano*8-posicion)%semilla != 0)
     {
         unsigned long int conteo=(tamano*8)-posicion;
-        metodo2(text,tamano,conteo,posicion);
+        r_metodo2(text,tamano,conteo,posicion);
     }
+    return text;
 }
 
-void escribirM2 ( string &datos,string nombre)
+void escribirM2 ( string datos,string nombre)
 {
-    fstream text;    
-    text.open(nombre, fstream::out | fstream::binary);
+    fstream text (nombre, fstream::out | fstream::binary);
     text<<datos;
 
     text.close();
