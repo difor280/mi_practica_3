@@ -14,19 +14,19 @@ void m2_codificacion(unsigned long long int tamano ,unsigned long int semilla,st
 
 }
 //cambiar en un futuro
-void m2_decodificacion(unsigned long long int tamano ,unsigned long int semilla,string nombre,string texto)
+string m2_decodificacion(unsigned long long int *tamano ,unsigned long int semilla,string nombre)
 {
-    texto=bin_m2(tamano,texto);
+    string texto;
+    lecturam2(&texto,nombre,tamano);
+    texto.pop_back();
+    texto=bin_m2(*tamano,texto);
     cout<<endl<<texto<<endl<<endl<<endl;
-
-    texto=r_metodo2(texto,tamano,semilla,0);
+    texto=r_metodo2(texto,*tamano,semilla,0);
     cout<<endl<<texto<<endl;
-    texto=traduccionM2(tamano,texto);
+    texto=traduccionM2(*tamano,texto);
     cout<<endl<<texto<<endl;
-    escribirM2(texto,nombre);
-
-    cout<<endl<<texto<<endl;
-
+    //escribirM2(texto,nombre);
+    return texto;
 }
 
 

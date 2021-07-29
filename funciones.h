@@ -33,7 +33,7 @@ void escribirM1 (char *,char *);
 //metodo II
 
 void m2_codificacion(unsigned long long int ,unsigned long int,string,string);
-void m2_decodificacion(unsigned long long int ,unsigned long int,string,string);
+string m2_decodificacion(unsigned long long int *,unsigned long int,string);
 void lecturam2(string *,string,unsigned long long*);
 string bin_m2(unsigned long long int , string );
 string metodo2(string,unsigned long long,unsigned long int,unsigned long int);

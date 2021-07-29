@@ -6,10 +6,10 @@ int main()
     unsigned int long semilla ;
 
     //codificacion
-
+    implementacion(&semilla,&metodo);
     if(COD()==1)
     {
-        implementacion(&semilla,&metodo);
+
 
         if(metodo==1)
         {
@@ -40,6 +40,7 @@ int main()
             cout<<endl<<texto<<endl<<endl;
             m2_codificacion(*tamano,semilla,"codificado.dat",texto);
 
+
             delete tamano;
         }
 
@@ -50,7 +51,6 @@ int main()
     else
     {
 
-           implementacion(&semilla,&metodo);
 
             if(metodo==1)
             {
@@ -59,16 +59,11 @@ int main()
             else
             {   unsigned long long *tamano = new unsigned long long;
                 string texto,nombre="codificado.dat";
-                //string *texto=new  string,nombre="natural.txt";
-                lecturam2(&texto,nombre,tamano);
-
-                texto.pop_back();
-                //*tamano=texto.length();
 
                 cout<<endl<<texto<<endl<<endl;
                 //m2_codificacion(*tamano,semilla,"codificacion.dat",texto);
-                m2_decodificacion(*tamano,semilla,"natural.txt",texto);
-
+                texto=m2_decodificacion(tamano,semilla,"natural.txt");
+                escribirM2(texto,nombre);
 
                 delete tamano;
             }
