@@ -1,44 +1,88 @@
 #include "funciones.h"
 
 //codificacion o decodificacion
-int COD()
-{   int resultado=0;
-    char cod=0;
+char COD()
+{
+    char opcion;
+    bool salida=true;
+    while (salida)
+    {
+        cout<<"\n\n\n\n\n\n\nBIENVENIDO A LA PRACTICA 3 de informatica universidada de antioquia\n"
+              "ingrese uno de los numero que indica la accion a realizar\n"
+              "1.primero metodo \n2.segundo metodo \n3.cajero \n";
+        cin>>opcion;
+        switch (opcion)
+        {
+            case '1':
+
+                return opcion ;
+            break;
+            case '2':
+
+                return opcion ;
+            break;
+            case '3':
+                 return opcion ;
+            break;
+            case '4':
+                 return opcion ;
+            break;
+            default:cout<<"porfavor ingresa 1 2 o 3 dependiendo de la necesidad ";
+        }
+    }
+
+    return opcion;
+}
+
+void implementacion(unsigned long int* semilla,unsigned short int* cod)
+{
+    *semilla=0;
+
+
+    cout<<"ingresa la semilla de codificacion\n"
+          "ADVERTENCIA:solo numeros"<<endl;cin>>*semilla;
+
 
     while (true)
     {
         cout<<"1.codificacion \n"
-              "2.decodificacion"<<endl;
-        cin>>cod;
-
-        if(cod<=50 and cod>48)
+                "2.decodificacion"<<endl;
+        cin>>*cod;
+        switch (*cod)
         {
-            break;
+        case 1:
+            return;
+        break;
+
+        case 2:
+            return;
+        break;
+
+        default:cout<<endl<<"porfavor precionar el numero correspondiente \n"
+                            "de procedimiento que quiere realizar"<<endl;
         }
-        cout<<endl<<"porfavor precionar el numero correspondiente al metodo"<<endl;
+
     }
-    return resultado=int(cod)-48;
+
+
 }
 
-void implementacion(unsigned long int* semilla,unsigned short int* metodo)
+void m1_codificacion(unsigned long long int tamano ,unsigned long int semilla,char* nombre,char* texto)
 {
-    cout<<"ingresa la semilla de codificacion"<<endl;cin>>*semilla;
 
 
-    while (true)
-    {
-        cout<<endl<<" selecciona metodo de codificacion \n "
-                    "1.primer metodo \n 2.segundo metodo  "<<endl;cin>>*metodo;
+    metodo1(texto,tamano,semilla,0,0,0);
+    texto=traduccionM1(tamano,texto);
+    escribirM1(texto,nombre,tamano);
+}
+char* m1_decodificacion(unsigned long long int tamano ,unsigned long int semilla,char *texto)
+{
 
-        if(*metodo<=2 and *metodo>0)
-        {
-            break;
-        }
-        cout<<endl<<"porfavor precionar el numero correspondiente al metodo"<<endl;
-    }
+    r_metodo1(texto,tamano,semilla,0,0,0);
+    texto=traduccionM1(tamano,texto);
+    return texto;
 
 }
-
 void tam(char* nombre ,unsigned long long *tamano)
 {
     fstream archivo(nombre, fstream::in | fstream::ate);
@@ -46,44 +90,43 @@ void tam(char* nombre ,unsigned long long *tamano)
     archivo.close();
 }
 
-char* lecturaM1(char* nombre,unsigned long long tamano)
+void lecturaM1(char * datos,char* nombre,unsigned long long tamano,unsigned pasar)
 {
 
-    fstream archivo(nombre, fstream::in);
+    fstream archivo;
+            archivo.open(nombre, fstream::in );
+    int letra;
+    for(;pasar>0;pasar--)
+    {
+        letra=archivo.get();
+    }
+    for(unsigned long long int i=0, posicion=0 ; i<tamano-pasar ;i++)
+    {    letra=archivo.get();
 
-     char *datos=new char [tamano];
-     for(unsigned long long int i=0 ; i<tamano ;i++)
-     {    int letra=archivo.get();
-          datos[i]=char(letra);
-     }
-     archivo.close();
-     return datos;
-     delete[] datos;
+         binarioM1(&posicion,letra,datos);
+    }
+    archivo.close();
 }
 
-//profe si ve esta parte del codigo,
-//me puede decir que es lo que esta mal
-//porque no me quiere crear  el archivo de texto
-void escribirM1 ( char *datos, char *nombre)
+
+void escribirM1 ( char *datos, char *nombre, unsigned long long tamano)
 {
 
-    fstream text(nombre, fstream::out  );
-    //text.write( datos,tamano);
-    text<< datos;
+    fstream text(nombre, fstream::out  |fstream::binary);
+    text.write( datos,tamano);
+    //text<< datos;
     text.close();
 }
 
 
 
-char *binarioM1(unsigned long long int tamano, char *escrito)
+void binarioM1(unsigned long long int* posicion, unsigned ascii,char* codificado)
 {
-    char bits[8], *codificado= new char [8*tamano];
-    unsigned char prueba;
+    char bits[8];
+
     int contador;
-    for (unsigned int i=0, ascii; i < tamano;i++)
-    {
-        prueba=unsigned(escrito[i]);
-        ascii= int ( prueba);
+
+
         contador=7;
         while (ascii > 0)
         {
@@ -95,24 +138,20 @@ char *binarioM1(unsigned long long int tamano, char *escrito)
             ascii = (int) ascii/2;
             contador--;
         }
-
-         for (int e=0 ; e<8; e++ )
-         {
+        unsigned long long posi=*posicion;
+        for (int e=0 ; e<8; e++, posi++ )
+        {
             if (e <= contador)
             {
-                    codificado[(8*i)+e]= '0';
+                codificado[posi]= '0';
             }
             else
             {
-                    codificado[(8*i)+e]=bits[e];
+                codificado[posi]=bits[e];
             }
 
-         }
-
-    }
-
-    return codificado;
-    delete [] codificado;
+        }
+        *posicion=posi;
 }
 
 
@@ -129,7 +168,7 @@ char * traduccionM1(unsigned long long int tamano, char *bina)
         {
             letra=letra+(pow((int(bina[i])-48)*2,a));
         }
-        if(bina[i]==0) escribir[e]= char(letra-1);
+        if(bina[i-1]=='0') escribir[e]= char(letra-1);
         else escribir[e]= char(letra);
     }
     return escribir;
@@ -140,7 +179,7 @@ char * traduccionM1(unsigned long long int tamano, char *bina)
 void metodo1(char* binario,unsigned long long tamano,unsigned long semilla,unsigned long ceros,unsigned long unos,unsigned long long posicion)
 {
     int8_t aplicacion,regla;
-    for(unsigned long int i = 0;i<((tamano*8)/semilla) and posicion< tamano*8 ;i++)
+    for(unsigned long int i = 0;i<(tamano*8)/semilla and posicion < tamano*8 ;i++)
     {
         sentencia(ceros,unos,&regla);
         aplicacion=0;
@@ -150,7 +189,7 @@ void metodo1(char* binario,unsigned long long tamano,unsigned long semilla,unsig
         {
             if(binario[a]=='1') unos++;
         }
-         ceros= semilla-unos;
+        ceros= semilla-unos;
         for(unsigned long e=0;e<semilla;posicion++,e++)
         {
             if(regla==aplicacion)
@@ -162,7 +201,7 @@ void metodo1(char* binario,unsigned long long tamano,unsigned long semilla,unsig
             else aplicacion++;
         }
     }
-    if(tamano*8%semilla != 0)
+    if((tamano*8-posicion)%semilla != 0)
     {
         unsigned long int sobras =(tamano*8)-posicion;
         metodo1(binario,tamano,sobras,ceros,unos,posicion);
@@ -194,10 +233,10 @@ void r_metodo1(char* binario,unsigned long long tamano,unsigned long semilla,uns
         {
             if(binario[a]=='1') unos++;
         }
-         ceros= semilla-unos;
+        ceros= semilla-unos;
     }
 
-    if(tamano*8%semilla != 0)
+    if((tamano*8-posicion)%semilla != 0)
     {
         unsigned long int sobras =(tamano*8)-posicion;
         r_metodo1(binario,tamano,sobras,ceros,unos,posicion);

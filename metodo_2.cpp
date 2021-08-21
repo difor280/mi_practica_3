@@ -1,78 +1,66 @@
-# include "funciones.h"
+#include "funciones.h"
 
 
 void m2_codificacion(unsigned long long int tamano ,unsigned long int semilla,string nombre,string texto)
 {
-    texto=bin_m2(tamano,texto);
-    cout<<endl<<texto<<endl<<endl<<endl;
+
+
     texto=metodo2(texto,tamano,semilla,0);
-    cout<<endl<<texto<<endl;
+
     texto=traduccionM2(tamano,texto);
-    cout<<endl<<texto<<endl;
+
     escribirM2(texto,nombre);
-    cout<<endl<<texto<<endl;
+
 
 }
 //cambiar en un futuro
 string m2_decodificacion(unsigned long long int *tamano ,unsigned long int semilla,string nombre)
 {
     string texto;
-    lecturam2(&texto,nombre,tamano);
-    texto.pop_back();
-    texto=bin_m2(*tamano,texto);
-    cout<<endl<<texto<<endl<<endl<<endl;
+    texto=lecturam2(nombre,tamano,0);
     texto=r_metodo2(texto,*tamano,semilla,0);
-    cout<<endl<<texto<<endl;
+
     texto=traduccionM2(*tamano,texto);
-    cout<<endl<<texto<<endl;
-    //escribirM2(texto,nombre);
     return texto;
 }
 
 
-void lecturam2(string *datos,string nombre,unsigned long long *tamano )
+string lecturam2(string nombre,unsigned long long *tamano,unsigned pasar )
 {
-       fstream archivo;
-       archivo.open(nombre, fstream::in | fstream::binary | fstream::ate);
-       *tamano=archivo.tellg();
-        archivo.seekg(0);
+    fstream archivo;
+    archivo.open(nombre, fstream::in | fstream::binary | fstream::ate);
+    *tamano=archivo.tellg();
+    archivo.seekg(0);
 
-       if (!archivo.is_open())
-       {
-           cout <<"Archivo no encontrado"<< endl;
-           return;
-       }
-       /*string *pala= new string;
-       while (getline(archivo,*pala,'\n'))
-       {
-           *datos=*datos+ *pala+'\n' ;
-       }
-       delete pala;
-        */
-       for(unsigned long long int i=0 ; i<=*tamano ;i++)
-       {    int letra=archivo.get();
-            cout<<endl<<letra<<endl;
-            cout<<endl<<char(letra)<<endl;
-           *datos=*datos+char(letra);
+    if (!archivo.is_open())
+    {
+        cout <<"Archivo no encontrado"<< endl;
+        return nullptr;
+    }
+    int letra;
+    for(;pasar>0;pasar--)
+    {
+        letra=archivo.get();
+    }
+    string datos;
+    for(unsigned long long int i=0 ; i<*tamano-pasar ;i++)
+    {    letra=archivo.get();
+        string binario;
 
-       }
+        binario=bin_m2(letra);
+        datos=datos+binario;
+
+    }
+    return datos;
 }
 
 
-
-
-
-string bin_m2(unsigned long long int tamano, string escrito)
+string bin_m2(unsigned int ascii )
 {
 
     string bits, codificado ;
     string prueba;
-    unsigned int ascii;
-    for (unsigned long int i=0; i<tamano;i++)
-    {
-        //prueba = ();
 
-        ascii= unsigned( int (escrito[i]));
         bits="";
         while(ascii > 0)
         {
@@ -92,13 +80,13 @@ string bin_m2(unsigned long long int tamano, string escrito)
             bits='0'+ bits;
         }
         codificado= codificado+bits;
-    }
-   
+
+
     return codificado;
 
 }
 
-string traduccionM2(unsigned long long int tamano, string bina)
+string traduccionM2(unsigned long long int tamano, string bina)//traduce de binario a squi
 {
 
     string escribir;
@@ -112,7 +100,7 @@ string traduccionM2(unsigned long long int tamano, string bina)
         }
 
         if(bina[i-1]=='0')
-        escribir= escribir+ char(letra-1);
+            escribir= escribir+ char(letra-1);
         else escribir=escribir + char(letra);
 
     }
@@ -139,23 +127,23 @@ string metodo2(string text, unsigned long long tamano, unsigned long int  semill
 
         for(unsigned int e=2;e<semilla;e++,posicion++)
         {
-                ultimo=nex;
-                nex=text[posicion];
-                text[posicion]=ultimo[0];
+            ultimo=nex;
+            nex=text[posicion];
+            text[posicion]=ultimo[0];
         }
     }
 
     if((tamano*8-posicion)%semilla != 0)
     {
         unsigned long int conteo=(tamano*8)-posicion;
-        metodo2(text,tamano,conteo,posicion);
+        text=metodo2(text,tamano,conteo,posicion);
     }
     return text;
 }
 
 
 //metodo dos decodificacion
-string r_metodo2(string text, unsigned long long tamano, unsigned long int  semilla,unsigned long int posicion)
+string r_metodo2(string text, unsigned long long tamano, unsigned long int  semilla,unsigned long long int posicion)
 {
     string atras,ultimo;
 
@@ -175,7 +163,7 @@ string r_metodo2(string text, unsigned long long tamano, unsigned long int  semi
     if((tamano*8-posicion)%semilla != 0)
     {
         unsigned long int conteo=(tamano*8)-posicion;
-        r_metodo2(text,tamano,conteo,posicion);
+        text=r_metodo2(text,tamano,conteo,posicion);
     }
     return text;
 }

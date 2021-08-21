@@ -1,7 +1,6 @@
-include "funciones.h"
+#include "funciones.h"
 
+/*funciones::funciones()
+{
 
-
-
-
-
+}*/
