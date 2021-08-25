@@ -2,7 +2,7 @@
 
 int main()
 {
-    unsigned short int metodo;
+    char metodo;
     unsigned int long semilla;
     unsigned short CoD;
 
@@ -139,19 +139,6 @@ int main()
         {   string documento;
             escrito=decodificador("usuario.dat");
             unsigned long long posicion;
-            /*for(unsigned short i=0;i<3;i++)
-            {   unsigned long long tamano;
-                string clave="";
-                cout<<"ingresar el numero de documento \n";
-                cin>>clave;
-                CoD=buscador(escrito,&tamano,clave,'\n');
-                if(CoD) break;
-                else
-                {
-                    cout<<"clave incorrecta, vuelve a ";
-                }
-
-            }*/
             CoD=ingreso(escrito,'\n',"el DOCUMENTO", &posicion);
             for(unsigned long long i=posicion;escrito[i]!=',';i++) documento= documento+escrito[i] ;
             cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
@@ -236,7 +223,7 @@ int main()
                             }
                         }
 
-                        cout<<"su saldo actual es de "<<tam<<" descontando el impuesto de 1000 por uso"<<endl;
+                        cout<<"su saldo actual es de "<<tam<<" descontando el impuesto de 1000 por uso\n"<<endl;
                         monto=to_string(tam);
                         medio=medio+monto;
                     }
@@ -276,7 +263,9 @@ int main()
 
             escrito=superios+medio+inferior;
             codificador(escrito,"usuario.dat");
-        }
+
+
+            }
 
 
     }
